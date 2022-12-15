@@ -24,17 +24,18 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile
       target: base
-    # environment:
-    #   VIEW_KEY: ${VIEW_KEY}
-    #   VALIDATOR_PRIVATE_KEY: ${VALIDATOR_PRIVATE_KEY}
-    #   ADDRESS: ${ADDRESS}
+    environment:
+      VIEW_KEY: ${VIEW_KEY}
+      VALIDATOR_PRIVATE_KEY: ${VALIDATOR_PRIVATE_KEY}
+      PROVER_PRIVATE_KEY: ${PROVER_PRIVATE_KEY}
+      ADDRESS: ${ADDRESS}
     depends_on:
       - postgres
     networks:
       - aleo_airflow
-    # ports:
-    #   - 4133:4133
-    #   - 3033:3033
+    ports:
+      - 4133:4133
+      - 3033:3033
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4133/"]
       interval: 1m30s
@@ -43,7 +44,7 @@ services:
       start_period: 10s
     volumes:
       - ./:/aleo_pool
-    command: bash
+    command: bash -c "aleo-pool-server --address ${ADDRESS} --port 4133 --api-port 3033"
 networks:
     aleo_airflow:
         driver: bridge

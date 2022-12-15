@@ -34,10 +34,11 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 
 COPY . /aleo_pool
 
-RUN git clone https://github.com/AleoHQ/snarkOS.git --depth 1
-RUN cd snarkOS && ./build_ubuntu.sh 
 RUN cargo +nightly install -Z sparse-registry --debug --path .
-# RUN cargo build --path .
-CMD bash
-# RUN cargo build
+
+ENV VALIDATOR_PRIVATE_KEY=APrivateKey
+ENV VIEW_KEY=AViewKey
+ENV ADDRESS=aleo
+ENV PROVER_PRIVATE_KEY=APrivateKey
+
 

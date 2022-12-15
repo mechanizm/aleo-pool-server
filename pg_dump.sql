@@ -19,7 +19,7 @@ SET row_security = off;
 --
 -- Name: pool; Type: SCHEMA; Schema: -; Owner: -
 --
-
+CREATE EXTENSION plpython3u;
 CREATE SCHEMA pool;
 
 
@@ -75,7 +75,7 @@ $_$;
 
 SET default_tablespace = '';
 
-SET default_table_access_method = heap;
+-- SET default_table_access_method = heap;
 
 --
 -- Name: balance; Type: TABLE; Schema: pool; Owner: -
