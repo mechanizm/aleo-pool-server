@@ -16,7 +16,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - aleo_airflow
+      - aleo_node_aleo_airflow
   pool:
     # image: "ghcr.io/mechanizm/aleo:validator"
     platform: linux/amd64
@@ -32,7 +32,7 @@ services:
     depends_on:
       - postgres
     networks:
-      - aleo_airflow
+      - aleo_node_aleo_airflow
     ports:
       - 4133:4133
       - 3033:3033
@@ -44,7 +44,7 @@ services:
       start_period: 10s
     volumes:
       - ./:/aleo_pool
-    command: bash -c "aleo-pool-server --address ${ADDRESS} --port 4133 --api-port 3033"
+    command: bash -c "aleo-pool-server --validator 192.168.32.2:4133 --address ${ADDRESS} --port 4133 --api-port 3033"
 networks:
-    aleo_airflow:
-        driver: bridge
+    aleo_node_aleo_airflow:
+        external: true
