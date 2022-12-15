@@ -1,0 +1,49 @@
+version: "3.7"
+services:
+  postgres:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: ./docker/postgres/Dockerfile
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      DB_DATABASE: my_db_name
+      DB_USER: my_name
+      DB_PASSWORD: my_password
+      DB_HOST: postgres
+    volumes:
+      - ./pg_dump.sql:/docker-entrypoint-initdb.d/pg_dump.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - aleo_airflow
+  pool:
+    # image: "ghcr.io/mechanizm/aleo:validator"
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: base
+    # environment:
+    #   VIEW_KEY: ${VIEW_KEY}
+    #   VALIDATOR_PRIVATE_KEY: ${VALIDATOR_PRIVATE_KEY}
+    #   ADDRESS: ${ADDRESS}
+    depends_on:
+      - postgres
+    networks:
+      - aleo_airflow
+    # ports:
+    #   - 4133:4133
+    #   - 3033:3033
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4133/"]
+      interval: 1m30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    volumes:
+      - ./:/aleo_pool
+    command: bash
+networks:
+    aleo_airflow:
+        driver: bridge
