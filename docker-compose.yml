@@ -26,7 +26,6 @@ services:
       target: base
     environment:
       VIEW_KEY: ${VIEW_KEY}
-      VALIDATOR_PRIVATE_KEY: ${VALIDATOR_PRIVATE_KEY}
       PROVER_PRIVATE_KEY: ${PROVER_PRIVATE_KEY}
       ADDRESS: ${ADDRESS}
     depends_on:
@@ -35,16 +34,18 @@ services:
       - aleo_node_aleo_airflow
     ports:
       - 4133:4133
-      - 3033:3033
+      - 8080:8080
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4133/"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/current_round"]
       interval: 1m30s
       timeout: 3s
       retries: 3
       start_period: 10s
     volumes:
       - ./:/aleo_pool
-    command: bash -c "aleo-pool-server --validator 192.168.32.2:4133 --address ${ADDRESS} --port 4133 --api-port 3033"
+    command: bash -c "aleo-pool-server --validator aleo_node_validator_1:4133 --address ${ADDRESS} --port 4133 --api-port 8080"
+    external_links:
+      - aleo_node_validator_1
 networks:
     aleo_node_aleo_airflow:
         external: true

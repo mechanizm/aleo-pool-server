@@ -26,6 +26,7 @@ RUN apt install -y apt-utils
 RUN apt-get install -y ufw
 RUN apt install -y nano
 RUN apt-get install -y python3
+RUN apt-get install -y iputils-ping
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
 
